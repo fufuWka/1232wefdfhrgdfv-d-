@@ -4,28 +4,56 @@ import os
 from dotenv import load_dotenv
 
 from aiogram import Bot, Dispatcher
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import (
+    Message,
+    CallbackQuery
+)
 from aiogram.filters import Command
+
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
 load_dotenv()
 
+
 TOKEN = os.getenv("BOT_TOKEN")
 
+
 if not TOKEN:
-    raise ValueError("BOT_TOKEN не найден")
+    raise Exception("BOT_TOKEN не найден")
 
 
-bot = Bot(token=TOKEN)
+bot = Bot(TOKEN)
+
 dp = Dispatcher()
 
 
-# =====================
-# КНОПКИ
-# =====================
+# ==========================
+# Ссылки подписок
+# ==========================
 
-def main_menu():
+FREE_SUB = (
+    "https://gist.githubusercontent.com/"
+    "fufuWka/58e04a989aea6e1adaf6fe809525148f/"
+    "raw/59f8d78fe298ba2743279f350a4b75b82e4ae8b1/"
+    "FREE_VPN.bot"
+)
+
+
+PRO_SUB = (
+    "https://gist.githubusercontent.com/"
+    "fufuWka/58e04a989aea6e1adaf6fe809525148f/"
+    "raw/ff9ef77549fbf3a3c60482bb19817bba14ca1e0d/"
+    "PRO_VPN.bot"
+)
+
+
+# ==========================
+# Клавиатуры
+# ==========================
+
+
+def main_keyboard():
 
     kb = InlineKeyboardBuilder()
 
@@ -55,7 +83,7 @@ def main_menu():
 
 
 
-def vpn_menu():
+def vpn_keyboard():
 
     kb = InlineKeyboardBuilder()
 
@@ -74,13 +102,14 @@ def vpn_menu():
         callback_data="back"
     )
 
+
     kb.adjust(2)
 
     return kb.as_markup()
 
 
 
-def back_button():
+def back_keyboard():
 
     kb = InlineKeyboardBuilder()
 
@@ -93,9 +122,29 @@ def back_button():
 
 
 
-# =====================
+def subscribe_keyboard(link):
+
+    kb = InlineKeyboardBuilder()
+
+    kb.button(
+        text="🔗 Открыть подписку",
+        url=link
+    )
+
+    kb.button(
+        text="◀ Назад",
+        callback_data="vpn"
+    )
+
+    kb.adjust(1)
+
+    return kb.as_markup()
+
+
+
+# ==========================
 # START
-# =====================
+# ==========================
 
 
 @dp.message(Command("start"))
@@ -112,12 +161,14 @@ async def start(message: Message):
     text = f"""
 🚀 NE_FREE_VPN_bot
 
+
 Привет, {user}! 👋
 
 
 Это NE_FREE_VPN_bot.
 
 Он может бесплатно предоставить вам VPN.
+
 
 Будем рады, если воспользуетесь нашим сервисом!
 
@@ -133,195 +184,263 @@ async def start(message: Message):
 
     await message.answer(
         text,
-        reply_markup=main_menu()
+        reply_markup=main_keyboard()
     )
 
 
 
-# =====================
-# VPN
-# =====================
+# ==========================
+# VPN MENU
+# ==========================
 
 
 @dp.callback_query(lambda c: c.data == "vpn")
-async def vpn(callback: CallbackQuery):
+async def vpn_menu(call: CallbackQuery):
 
-    await callback.message.edit_text(
+    await call.message.edit_text(
         """
-🌐 VPN
+⚡ VPN
+
 
 Выберите тариф:
 
+
 🆓 FREE
-Бесплатный доступ
+
+• 3 сервера
+• Бесплатный доступ
+• Автообновление
+
 
 ⭐ PRO
-Расширенный доступ
+
+• 8 серверов
+• Больше возможностей
+• Приоритетные сервера
 """,
-        reply_markup=vpn_menu()
+        reply_markup=vpn_keyboard()
     )
 
+
+
+# ==========================
+# FREE
+# ==========================
 
 
 @dp.callback_query(lambda c: c.data == "free")
-async def free(callback: CallbackQuery):
+async def free(call: CallbackQuery):
 
-    await callback.message.edit_text(
-        """
-🆓 FREE VPN
-
-
-Статус:
-🟢 Доступен
+    await call.message.edit_text(
+        f"""
+🆓 NE FREE VPN
 
 
-Серверы:
-🌍 Скоро будут добавлены
+Ваш тариф:
+
+FREE
 
 
-Конфиг:
-⏳ В разработке
+Характеристики:
+
+🌍 Серверов: 3
+⚡ Скорость: высокая
+🔄 Обновление: автоматически
+
+
+Ваша подписка:
+
+Нажмите кнопку ниже 👇
+
+
+Если что-то не работает —
+обновите подписку.
+
+
+Наш бот:
+https://t.me/NE_FREE_VPN_bot
 """,
-        reply_markup=back_button()
+        reply_markup=subscribe_keyboard(FREE_SUB)
     )
 
+
+
+# ==========================
+# PRO
+# ==========================
 
 
 @dp.callback_query(lambda c: c.data == "pro")
-async def pro(callback: CallbackQuery):
+async def pro(call: CallbackQuery):
 
-    await callback.message.edit_text(
-        """
-⭐ PRO VPN
-
-
-Преимущества:
-
-⚡ Высокая скорость
-🌍 Больше серверов
-🚀 Приоритет
+    await call.message.edit_text(
+        f"""
+⭐ NE FREE VPN PRO
 
 
-Статус:
-🔒 Требуется подписка
+Ваш тариф:
+
+PRO
+
+
+Характеристики:
+
+🌍 Серверов: 8
+⚡ Максимальная скорость
+🚀 Приоритетное подключение
+🔄 Автообновление
+
+
+Ваша подписка:
+
+Нажмите кнопку ниже 👇
+
+
+Если появились проблемы —
+обратитесь в поддержку.
+
+
+Наш бот:
+https://t.me/NE_FREE_VPN_bot
 """,
-        reply_markup=back_button()
+        reply_markup=subscribe_keyboard(PRO_SUB)
     )
 
 
 
-# =====================
-# СТАТИСТИКА
-# =====================
+# ==========================
+# STATS
+# ==========================
 
 
 @dp.callback_query(lambda c: c.data == "stats")
-async def stats(callback: CallbackQuery):
+async def stats(call: CallbackQuery):
 
-    await callback.message.edit_text(
+    await call.message.edit_text(
         f"""
 📊 Статистика
 
 
 👤 Пользователь:
-{callback.from_user.full_name}
+
+{call.from_user.full_name}
 
 
 🆔 ID:
-{callback.from_user.id}
 
-
-🌐 VPN использован:
-0 раз
+{call.from_user.id}
 
 
 ⭐ Тариф:
+
 FREE
+
+
+🌐 VPN подключений:
+
+0
+
+
+🚀 NE FREE VPN
 """,
-        reply_markup=back_button()
+        reply_markup=back_keyboard()
     )
 
 
 
-# =====================
-# НАСТРОЙКИ
-# =====================
+# ==========================
+# SETTINGS
+# ==========================
 
 
 @dp.callback_query(lambda c: c.data == "settings")
-async def settings(callback: CallbackQuery):
+async def settings(call: CallbackQuery):
 
-    await callback.message.edit_text(
+    await call.message.edit_text(
         """
 🛠 Настройки
 
 
 🌐 Язык:
+
 🇷🇺 Русский
 
 
 🔔 Уведомления:
+
 ✅ Включены
 
 
 🔐 Безопасность:
+
 🟢 Активна
+
+
+Раздел настроек находится
+в разработке 🚧
 """,
-        reply_markup=back_button()
+        reply_markup=back_keyboard()
     )
 
 
 
-# =====================
-# ПОМОЩЬ
-# =====================
+# ==========================
+# HELP
+# ==========================
 
 
 @dp.callback_query(lambda c: c.data == "help")
-async def help_menu(callback: CallbackQuery):
+async def help(call: CallbackQuery):
 
-    await callback.message.edit_text(
+    await call.message.edit_text(
         """
 ❓ Помощь
 
 
-Раздел находится в разработке 🚧
+Раздел находится
+в разработке 🚧
 
 
-Скоро здесь появится:
+Скоро здесь появятся:
 
+
+• Инструкции
 • FAQ
 • Поддержка
-• Инструкции
 • Новости
 
 
-Спасибо за использование
-NE_FREE_VPN_bot ❤️
+Спасибо за использование ❤️
+NE FREE VPN
 """,
-        reply_markup=back_button()
+        reply_markup=back_keyboard()
     )
 
 
 
-# =====================
-# НАЗАД
-# =====================
+# ==========================
+# BACK
+# ==========================
 
 
 @dp.callback_query(lambda c: c.data == "back")
-async def back(callback: CallbackQuery):
+async def back(call: CallbackQuery):
 
-    await callback.message.edit_text(
-        "🚀 Главное меню\n\nВыберите действие:",
-        reply_markup=main_menu()
+    await call.message.edit_text(
+        """
+🚀 NE FREE VPN
+
+
+Выберите действие:
+""",
+        reply_markup=main_keyboard()
     )
 
 
 
-# =====================
-# ЗАПУСК
-# =====================
+# ==========================
+# RUN
+# ==========================
 
 
 async def main():
@@ -333,4 +452,5 @@ async def main():
 
 
 if __name__ == "__main__":
+
     asyncio.run(main())
