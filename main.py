@@ -1,9 +1,4 @@
 import asyncio
-import os
-
-from database import init_db, add_user
-
-from dotenv import load_dotenv
 
 from aiogram import Bot, Dispatcher
 from aiogram.types import (
@@ -12,141 +7,37 @@ from aiogram.types import (
 )
 from aiogram.filters import Command
 
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from config import (
+    BOT_TOKEN,
+    ADMIN_ID,
+    FREE_SUB,
+    PRO_SUB,
+    BOT_NAME
+)
+
+from database import (
+    init_db,
+    add_user,
+    get_user
+)
+
+from keyboards import (
+    main_keyboard,
+    back_keyboard
+)
 
 
-load_dotenv()
-
-
-TOKEN = os.getenv("BOT_TOKEN")
-
-
-if not TOKEN:
-    raise Exception("BOT_TOKEN не найден")
-
-
-bot = Bot(TOKEN)
+bot = Bot(
+    token=BOT_TOKEN
+)
 
 dp = Dispatcher()
 
 
-# ==========================
-# Ссылки подписок
-# ==========================
 
-FREE_SUB = (
-    "https://gist.githubusercontent.com/"
-    "fufuWka/58e04a989aea6e1adaf6fe809525148f/"
-    "raw/59f8d78fe298ba2743279f350a4b75b82e4ae8b1/"
-    "FREE_VPN.bot"
-)
-
-
-PRO_SUB = (
-    "https://gist.githubusercontent.com/"
-    "fufuWka/58e04a989aea6e1adaf6fe809525148f/"
-    "raw/ff9ef77549fbf3a3c60482bb19817bba14ca1e0d/"
-    "PRO_VPN.bot"
-)
-
-
-# ==========================
-# Клавиатуры
-# ==========================
-
-
-def main_keyboard():
-
-    kb = InlineKeyboardBuilder()
-
-    kb.button(
-        text="⚡ VPN",
-        callback_data="vpn"
-    )
-
-    kb.button(
-        text="📊 Статистика",
-        callback_data="stats"
-    )
-
-    kb.button(
-        text="🛠 Настройки",
-        callback_data="settings"
-    )
-
-    kb.button(
-        text="❓ Помощь",
-        callback_data="help"
-    )
-
-    kb.adjust(2)
-
-    return kb.as_markup()
-
-
-
-def vpn_keyboard():
-
-    kb = InlineKeyboardBuilder()
-
-    kb.button(
-        text="🆓 FREE",
-        callback_data="free"
-    )
-
-    kb.button(
-        text="⭐ PRO",
-        callback_data="pro"
-    )
-
-    kb.button(
-        text="◀ Назад",
-        callback_data="back"
-    )
-
-
-    kb.adjust(2)
-
-    return kb.as_markup()
-
-
-
-def back_keyboard():
-
-    kb = InlineKeyboardBuilder()
-
-    kb.button(
-        text="◀ Назад",
-        callback_data="back"
-    )
-
-    return kb.as_markup()
-
-
-
-def subscribe_keyboard(link):
-
-    kb = InlineKeyboardBuilder()
-
-    kb.button(
-        text="🔗 Открыть подписку",
-        url=link
-    )
-
-    kb.button(
-        text="◀ Назад",
-        callback_data="vpn"
-    )
-
-    kb.adjust(1)
-
-    return kb.as_markup()
-
-
-
-# ==========================
+# =========================
 # START
-# ==========================
+# =========================
 
 
 @dp.message(Command("start"))
@@ -158,6 +49,7 @@ async def start(message: Message):
         message.from_user.first_name
     )
 
+
     username = message.from_user.username
 
     if username:
@@ -166,8 +58,13 @@ async def start(message: Message):
         user = message.from_user.first_name
 
 
+    is_admin = (
+        message.from_user.id == ADMIN_ID
+    )
+
+
     text = f"""
-🚀 NE_FREE_VPN_bot
+🚀 {BOT_NAME}
 
 
 Привет, {user}! 👋
@@ -192,18 +89,20 @@ async def start(message: Message):
 
     await message.answer(
         text,
-        reply_markup=main_keyboard()
+        reply_markup=main_keyboard(
+            is_admin
+        )
     )
 
 
 
-# ==========================
-# VPN MENU
-# ==========================
+# =========================
+# VPN
+# =========================
 
 
 @dp.callback_query(lambda c: c.data == "vpn")
-async def vpn_menu(call: CallbackQuery):
+async def vpn(call: CallbackQuery):
 
     await call.message.edit_text(
         """
@@ -224,16 +123,16 @@ async def vpn_menu(call: CallbackQuery):
 
 • 8 серверов
 • Больше возможностей
-• Приоритетные сервера
+• Приоритет
 """,
-        reply_markup=vpn_keyboard()
+        reply_markup=back_keyboard()
     )
 
 
 
-# ==========================
+# =========================
 # FREE
-# ==========================
+# =========================
 
 
 @dp.callback_query(lambda c: c.data == "free")
@@ -244,7 +143,7 @@ async def free(call: CallbackQuery):
 🆓 NE FREE VPN
 
 
-Ваш тариф:
+Тариф:
 
 FREE
 
@@ -258,24 +157,20 @@ FREE
 
 Ваша подписка:
 
-Нажмите кнопку ниже 👇
-
-
-Если что-то не работает —
-обновите подписку.
+{FREE_SUB}
 
 
 Наш бот:
 https://t.me/NE_FREE_VPN_bot
 """,
-        reply_markup=subscribe_keyboard(FREE_SUB)
+        reply_markup=back_keyboard()
     )
 
 
 
-# ==========================
+# =========================
 # PRO
-# ==========================
+# =========================
 
 
 @dp.callback_query(lambda c: c.data == "pro")
@@ -286,7 +181,7 @@ async def pro(call: CallbackQuery):
 ⭐ NE FREE VPN PRO
 
 
-Ваш тариф:
+Тариф:
 
 PRO
 
@@ -295,34 +190,42 @@ PRO
 
 🌍 Серверов: 8
 ⚡ Максимальная скорость
-🚀 Приоритетное подключение
+🚀 Приоритетные сервера
 🔄 Автообновление
 
 
 Ваша подписка:
 
-Нажмите кнопку ниже 👇
-
-
-Если появились проблемы —
-обратитесь в поддержку.
+{PRO_SUB}
 
 
 Наш бот:
 https://t.me/NE_FREE_VPN_bot
 """,
-        reply_markup=subscribe_keyboard(PRO_SUB)
+        reply_markup=back_keyboard()
     )
 
 
 
-# ==========================
-# STATS
-# ==========================
+# =========================
+# STATISTICS
+# =========================
 
 
 @dp.callback_query(lambda c: c.data == "stats")
 async def stats(call: CallbackQuery):
+
+    user = await get_user(
+        call.from_user.id
+    )
+
+
+    tariff = "FREE"
+
+
+    if user:
+        tariff = user[4]
+
 
     await call.message.edit_text(
         f"""
@@ -341,24 +244,24 @@ async def stats(call: CallbackQuery):
 
 ⭐ Тариф:
 
-FREE
+{tariff}
 
 
-🌐 VPN подключений:
+🌐 VPN использовано:
 
-0
+0 раз
 
 
-🚀 NE FREE VPN
+🚀 {BOT_NAME}
 """,
         reply_markup=back_keyboard()
     )
 
 
 
-# ==========================
+# =========================
 # SETTINGS
-# ==========================
+# =========================
 
 
 @dp.callback_query(lambda c: c.data == "settings")
@@ -379,22 +282,18 @@ async def settings(call: CallbackQuery):
 ✅ Включены
 
 
-🔐 Безопасность:
+⚙️ Дополнительные настройки:
 
-🟢 Активна
-
-
-Раздел настроек находится
-в разработке 🚧
+В разработке 🚧
 """,
         reply_markup=back_keyboard()
     )
 
 
 
-# ==========================
+# =========================
 # HELP
-# ==========================
+# =========================
 
 
 @dp.callback_query(lambda c: c.data == "help")
@@ -409,30 +308,75 @@ async def help(call: CallbackQuery):
 в разработке 🚧
 
 
-Скоро здесь появятся:
+Скоро появятся:
 
-
-• Инструкции
 • FAQ
 • Поддержка
+• Инструкции
 • Новости
 
 
 Спасибо за использование ❤️
-NE FREE VPN
 """,
         reply_markup=back_keyboard()
     )
 
 
 
-# ==========================
+# =========================
+# ADMIN
+# =========================
+
+
+@dp.callback_query(lambda c: c.data == "admin")
+async def admin(call: CallbackQuery):
+
+    if call.from_user.id != ADMIN_ID:
+        await call.answer(
+            "Нет доступа ❌",
+            show_alert=True
+        )
+        return
+
+
+    await call.message.edit_text(
+        """
+👑 Админ-панель
+
+
+🟢 Бот работает
+
+
+Функции:
+
+📊 Статистика
+
+📢 Рассылка
+
+👥 Пользователи
+
+⚙️ Настройки
+
+
+Скоро будет больше 🚀
+""",
+        reply_markup=back_keyboard()
+    )
+
+
+
+# =========================
 # BACK
-# ==========================
+# =========================
 
 
 @dp.callback_query(lambda c: c.data == "back")
 async def back(call: CallbackQuery):
+
+    is_admin = (
+        call.from_user.id == ADMIN_ID
+    )
+
 
     await call.message.edit_text(
         """
@@ -441,21 +385,26 @@ async def back(call: CallbackQuery):
 
 Выберите действие:
 """,
-        reply_markup=main_keyboard()
+        reply_markup=main_keyboard(
+            is_admin
+        )
     )
 
 
 
-# ==========================
+# =========================
 # RUN
-# ==========================
+# =========================
 
 
 async def main():
 
     await init_db()
 
-    print("NE_FREE_VPN_bot запущен!")
+    print(
+        "NE_FREE_VPN_bot запущен!"
+    )
+
 
     await dp.start_polling(bot)
 
