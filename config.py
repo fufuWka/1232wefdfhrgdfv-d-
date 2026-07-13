@@ -25,7 +25,6 @@ BOT_LINK = "https://t.me/NE_FREE_VPN_bot"
 # ==========================
 
 FREE_SUB = (
-    https://raw.githubusercontent.com/fufuWka/1232wefdfhrgdfv-d-/refs/heads/main/free.bot
     "https://raw.githubusercontent.com/"
     "fufuWka/1232wefdfhrgdfv-d-/"
     "refs/heads/main/"
@@ -33,7 +32,7 @@ FREE_SUB = (
 )
 
 PRO_SUB = (
-"https://raw.githubusercontent.com/"
+    "https://raw.githubusercontent.com/"
     "fufuWka/1232wefdfhrgdfv-d-/"
     "refs/heads/main/"
     "pro.bot"
