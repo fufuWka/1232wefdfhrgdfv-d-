@@ -7,24 +7,32 @@ from aiogram.types import (
 )
 from aiogram.filters import Command
 
+
 from config import (
     BOT_TOKEN,
     ADMIN_ID,
+    BOT_NAME,
     FREE_SUB,
-    PRO_SUB,
-    BOT_NAME
+    PRO_SUB
 )
+
 
 from database import (
     init_db,
     add_user,
-    get_user
+    get_user,
+    get_users_count,
+    set_tariff
 )
+
 
 from keyboards import (
     main_keyboard,
-    back_keyboard
+    vpn_keyboard,
+    back_keyboard,
+    profile_keyboard
 )
+
 
 
 bot = Bot(
@@ -50,12 +58,11 @@ async def start(message: Message):
     )
 
 
-    username = message.from_user.username
-
-    if username:
-        user = "@" + username
-    else:
-        user = message.from_user.first_name
+    username = (
+        "@" + message.from_user.username
+        if message.from_user.username
+        else message.from_user.first_name
+    )
 
 
     is_admin = (
@@ -67,7 +74,7 @@ async def start(message: Message):
 🚀 {BOT_NAME}
 
 
-Привет, {user}! 👋
+Привет, {username}! 👋
 
 
 Это NE_FREE_VPN_bot.
@@ -75,12 +82,13 @@ async def start(message: Message):
 Он может бесплатно предоставить вам VPN.
 
 
-Будем рады, если воспользуетесь нашим сервисом!
+Мы рады, что вы пользуетесь нашим сервисом ❤️
 
 
-Мои возможности:
+Возможности:
 
 ⚡ VPN
+👤 Профиль
 📊 Статистика
 🛠 Настройки
 ❓ Помощь
@@ -89,20 +97,18 @@ async def start(message: Message):
 
     await message.answer(
         text,
-        reply_markup=main_keyboard(
-            is_admin
-        )
+        reply_markup=main_keyboard(is_admin)
     )
 
 
 
 # =========================
-# VPN
+# VPN MENU
 # =========================
 
 
 @dp.callback_query(lambda c: c.data == "vpn")
-async def vpn(call: CallbackQuery):
+async def vpn_menu(call: CallbackQuery):
 
     await call.message.edit_text(
         """
@@ -122,10 +128,10 @@ async def vpn(call: CallbackQuery):
 ⭐ PRO
 
 • 8 серверов
-• Больше возможностей
+• Максимальная скорость
 • Приоритет
 """,
-        reply_markup=back_keyboard()
+        reply_markup=vpn_keyboard()
     )
 
 
@@ -138,12 +144,18 @@ async def vpn(call: CallbackQuery):
 @dp.callback_query(lambda c: c.data == "free")
 async def free(call: CallbackQuery):
 
+    await set_tariff(
+        call.from_user.id,
+        "FREE"
+    )
+
+
     await call.message.edit_text(
         f"""
 🆓 NE FREE VPN
 
 
-Тариф:
+Ваш тариф:
 
 FREE
 
@@ -151,19 +163,21 @@ FREE
 Характеристики:
 
 🌍 Серверов: 3
+
 ⚡ Скорость: высокая
-🔄 Обновление: автоматически
+
+🔄 Обновление:
+автоматически
 
 
-Ваша подписка:
-
-{FREE_SUB}
+Нажмите кнопку ниже,
+чтобы открыть подписку:
 
 
 Наш бот:
 https://t.me/NE_FREE_VPN_bot
 """,
-        reply_markup=back_keyboard()
+        reply_markup=profile_keyboard(FREE_SUB)
     )
 
 
@@ -176,12 +190,18 @@ https://t.me/NE_FREE_VPN_bot
 @dp.callback_query(lambda c: c.data == "pro")
 async def pro(call: CallbackQuery):
 
+    await set_tariff(
+        call.from_user.id,
+        "PRO"
+    )
+
+
     await call.message.edit_text(
         f"""
 ⭐ NE FREE VPN PRO
 
 
-Тариф:
+Ваш тариф:
 
 PRO
 
@@ -189,21 +209,71 @@ PRO
 Характеристики:
 
 🌍 Серверов: 8
+
 ⚡ Максимальная скорость
+
 🚀 Приоритетные сервера
+
 🔄 Автообновление
 
 
-Ваша подписка:
-
-{PRO_SUB}
+Приятного пользования ❤️
 
 
 Наш бот:
 https://t.me/NE_FREE_VPN_bot
 """,
-        reply_markup=back_keyboard()
+        reply_markup=profile_keyboard(PRO_SUB)
     )
+
+
+
+# =========================
+# PROFILE
+# =========================
+
+
+@dp.callback_query(lambda c: c.data == "profile")
+async def profile(call: CallbackQuery):
+
+    user = await get_user(
+        call.from_user.id
+    )
+
+
+    if user:
+
+        await call.message.edit_text(
+            f"""
+👤 Профиль
+
+
+Имя:
+
+{user[2]}
+
+
+Username:
+
+@{user[1] if user[1] else "нет"}
+
+
+Дата регистрации:
+
+{user[3]}
+
+
+Тариф:
+
+⭐ {user[4]}
+
+
+VPN получено:
+
+{user[5]}
+""",
+            reply_markup=back_keyboard()
+        )
 
 
 
@@ -215,16 +285,7 @@ https://t.me/NE_FREE_VPN_bot
 @dp.callback_query(lambda c: c.data == "stats")
 async def stats(call: CallbackQuery):
 
-    user = await get_user(
-        call.from_user.id
-    )
-
-
-    tariff = "FREE"
-
-
-    if user:
-        tariff = user[4]
+    users = await get_users_count()
 
 
     await call.message.edit_text(
@@ -232,27 +293,17 @@ async def stats(call: CallbackQuery):
 📊 Статистика
 
 
-👤 Пользователь:
+👥 Пользователей:
 
-{call.from_user.full_name}
-
-
-🆔 ID:
-
-{call.from_user.id}
+{users}
 
 
-⭐ Тариф:
+🟢 Сервис:
 
-{tariff}
-
-
-🌐 VPN использовано:
-
-0 раз
+Работает
 
 
-🚀 {BOT_NAME}
+🚀 NE FREE VPN
 """,
         reply_markup=back_keyboard()
     )
@@ -282,9 +333,9 @@ async def settings(call: CallbackQuery):
 ✅ Включены
 
 
-⚙️ Дополнительные настройки:
+⚙️ Дополнительные функции:
 
-В разработке 🚧
+Скоро появятся 🚧
 """,
         reply_markup=back_keyboard()
     )
@@ -297,7 +348,7 @@ async def settings(call: CallbackQuery):
 
 
 @dp.callback_query(lambda c: c.data == "help")
-async def help(call: CallbackQuery):
+async def help_menu(call: CallbackQuery):
 
     await call.message.edit_text(
         """
@@ -311,8 +362,8 @@ async def help(call: CallbackQuery):
 Скоро появятся:
 
 • FAQ
-• Поддержка
 • Инструкции
+• Поддержка
 • Новости
 
 
@@ -332,10 +383,12 @@ async def help(call: CallbackQuery):
 async def admin(call: CallbackQuery):
 
     if call.from_user.id != ADMIN_ID:
+
         await call.answer(
             "Нет доступа ❌",
             show_alert=True
         )
+
         return
 
 
@@ -349,16 +402,13 @@ async def admin(call: CallbackQuery):
 
 Функции:
 
-📊 Статистика
+👥 Пользователи
 
 📢 Рассылка
 
-👥 Пользователи
+📊 Статистика
 
 ⚙️ Настройки
-
-
-Скоро будет больше 🚀
 """,
         reply_markup=back_keyboard()
     )
@@ -385,9 +435,7 @@ async def back(call: CallbackQuery):
 
 Выберите действие:
 """,
-        reply_markup=main_keyboard(
-            is_admin
-        )
+        reply_markup=main_keyboard(is_admin)
     )
 
 
