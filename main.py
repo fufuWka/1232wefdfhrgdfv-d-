@@ -1,12 +1,8 @@
 import asyncio
 
 from aiogram import Bot, Dispatcher
-from aiogram.types import (
-    Message,
-    CallbackQuery
-)
+from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
-
 
 from config import (
     BOT_TOKEN,
@@ -16,7 +12,6 @@ from config import (
     PRO_SUB
 )
 
-
 from database import (
     init_db,
     add_user,
@@ -25,14 +20,11 @@ from database import (
     set_tariff
 )
 
-
 from keyboards import (
     main_keyboard,
     vpn_keyboard,
-    back_keyboard,
-    profile_keyboard
+    back_keyboard
 )
-
 
 
 bot = Bot(
@@ -70,7 +62,8 @@ async def start(message: Message):
     )
 
 
-    text = f"""
+    await message.answer(
+        f"""
 🚀 {BOT_NAME}
 
 
@@ -82,21 +75,17 @@ async def start(message: Message):
 Он может бесплатно предоставить вам VPN.
 
 
-Мы рады, что вы пользуетесь нашим сервисом ❤️
+Будем рады, если воспользуетесь нашим сервисом ❤️
 
 
-Возможности:
+Мои возможности:
 
 ⚡ VPN
 👤 Профиль
 📊 Статистика
 🛠 Настройки
 ❓ Помощь
-"""
-
-
-    await message.answer(
-        text,
+""",
         reply_markup=main_keyboard(is_admin)
     )
 
@@ -122,14 +111,12 @@ async def vpn_menu(call: CallbackQuery):
 
 • 3 сервера
 • Бесплатный доступ
-• Автообновление
 
 
 ⭐ PRO
 
 • 8 серверов
-• Максимальная скорость
-• Приоритет
+• Максимальные возможности
 """,
         reply_markup=vpn_keyboard()
     )
@@ -170,14 +157,15 @@ FREE
 автоматически
 
 
-Нажмите кнопку ниже,
-чтобы открыть подписку:
+Подписка:
+
+{FREE_SUB}
 
 
 Наш бот:
 https://t.me/NE_FREE_VPN_bot
 """,
-        reply_markup=profile_keyboard(FREE_SUB)
+        reply_markup=back_keyboard()
     )
 
 
@@ -214,16 +202,19 @@ PRO
 
 🚀 Приоритетные сервера
 
-🔄 Автообновление
+🔄 Обновление:
+автоматически
 
 
-Приятного пользования ❤️
+Подписка:
+
+{PRO_SUB}
 
 
 Наш бот:
 https://t.me/NE_FREE_VPN_bot
 """,
-        reply_markup=profile_keyboard(PRO_SUB)
+        reply_markup=back_keyboard()
     )
 
 
@@ -278,7 +269,7 @@ VPN получено:
 
 
 # =========================
-# STATISTICS
+# STATS
 # =========================
 
 
@@ -298,9 +289,9 @@ async def stats(call: CallbackQuery):
 {users}
 
 
-🟢 Сервис:
+🟢 Статус:
 
-Работает
+Онлайн
 
 
 🚀 NE FREE VPN
@@ -335,7 +326,7 @@ async def settings(call: CallbackQuery):
 
 ⚙️ Дополнительные функции:
 
-Скоро появятся 🚧
+В разработке 🚧
 """,
         reply_markup=back_keyboard()
     )
@@ -364,7 +355,6 @@ async def help_menu(call: CallbackQuery):
 • FAQ
 • Инструкции
 • Поддержка
-• Новости
 
 
 Спасибо за использование ❤️
@@ -407,8 +397,6 @@ async def admin(call: CallbackQuery):
 📢 Рассылка
 
 📊 Статистика
-
-⚙️ Настройки
 """,
         reply_markup=back_keyboard()
     )
@@ -423,11 +411,6 @@ async def admin(call: CallbackQuery):
 @dp.callback_query(lambda c: c.data == "back")
 async def back(call: CallbackQuery):
 
-    is_admin = (
-        call.from_user.id == ADMIN_ID
-    )
-
-
     await call.message.edit_text(
         """
 🚀 NE FREE VPN
@@ -435,7 +418,9 @@ async def back(call: CallbackQuery):
 
 Выберите действие:
 """,
-        reply_markup=main_keyboard(is_admin)
+        reply_markup=main_keyboard(
+            call.from_user.id == ADMIN_ID
+        )
     )
 
 
@@ -452,7 +437,6 @@ async def main():
     print(
         "NE_FREE_VPN_bot запущен!"
     )
-
 
     await dp.start_polling(bot)
 
