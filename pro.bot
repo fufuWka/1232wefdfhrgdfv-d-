@@ -1,0 +1,24 @@
+#profile-title: PRO VPN v1.2
+#profile-update-interval: 102424378987356283745384953
+#subscription-userinfo: upload=0; download=0; total=1; expire=2546249531
+
+#announce: base64:4q2QIE5FIEZSRUUgVlBOIOKAlCBQUk8K0KHQv9Cw0YHQuNCx0L4g0LfQsCDQuNGB0L/QvtC70YzQt9C+0LLQsNC90LjQtSBQUk8hCgrQkiDRgtCw0YDQuNGEINCy0YXQvtC00Y/RgjoK4oCiIPCfjI0gOCDRgdC10YDQstC10YDQvtCyCuKAoiDimpEg0JzQsNC60YHQuNC80LDQu9GM0L3QsNGPINGB0LrQvtGA0L7RgdGC0YwK4oCiIPCfmoAg0J/RgNC40L7RgNC40YLQtdGC0L3Ri9C1INGD0LfQu9GLCgpodHRwczovL3QubWUvTkVfRlJFRV9WUE5fYm90
+
+vless://ae8d645e-3971-40ec-8438-6afa31f1a811@ms.pleiades.codes:443?type=xhttp&security=tls&encryption=none&sni=ms.pleiades.codes&fp=chrome&alpn=h2&host=ms.pleiades.codes&path=%2Fxhttppath&mode=packet-up#%F0%9F%87%B8%F0%9F%87%B4LTE
+vless://ae8d645e-3971-40ec-8438-6afa31f1a811@dns.pleiades.codes:443?type=xhttp&security=tls&encryption=none&sni=dns.pleiades.codes&fp=chrome&alpn=h2,http/1.1&host=dns.pleiades.codes&path=%2Fuploadfiles%2F&mode=packet-up#%F0%9F%87%B8%F0%9F%87%B4LTE 2
+vless://b0ec4b93-7602-415d-a832-b50477e6cd20@186.246.1.119:443?encryption=none&security=reality&type=grpc&sni=optim.tildacdn.pub&fp=firefox&pbk=unNROkbh95ZZNHzG2RIkgrFftOLldNH0ccmtW63CziE&serviceName=ebl#%F0%9F%87%B7%F0%9F%87%BA%20Russia
+hy2://b0ec4b93-7602-415d-a832-b50477e6cd20@deu2.pandaonline.org:443?sni=deu2.pandaonline.org&alpn=h3&insecure=0#%F0%9F%87%A9%F0%9F%87%AA%20Germany
+vless://b0ec4b93-7602-415d-a832-b50477e6cd20@110.172.148.27:443?encryption=none&security=reality&sni=optim.tildacdn.pub&fp=chrome&pbk=fvpPs49YdpPvrAr7xyminj-wzGaRnB7CRVfYDalewkY&type=grpc&serviceName=ebl#%F0%9F%87%A6%F0%9F%87%B9%20Austria
+vless://b0ec4b93-7602-415d-a832-b50477e6cd20@che1.pandaonline.org:443?encryption=none&flow=xtls-rprx-vision&security=reality&sni=che1.pandaonline.org&fp=firefox&pbk=UAVPQ0oBg_Rg1_U3jZTliTJv85NQIc2Lhbb0TZxmd1I&type=tcp#%F0%9F%87%A8%F0%9F%87%AD%20Switzerland
+vless://b0ec4b93-7602-415d-a832-b50477e6cd20@blr1.pandaonline.org:443?type=tcp&security=reality&encryption=none&flow=xtls-rprx-vision&sni=blr1.pandaonline.org&fp=firefox&pbk=pnxYjtj85Vz5VZ_keDOlMiC_FTzE9-u0E-DASTzrr2E&sid=#🇧🇾 Belarus
+vless://0ab1a445-bb3b-49f5-a06d-28968d100bb5@62.84.99.130:443?type=grpc&security=reality&encryption=none&flow=&sni=hartfordmedia.online&fp=edge&pbk=xq8_e5PNS7vubb8jzDOtfT2MnppCmzUPqXuDwg1xBm8&sid=9c9999f9#🇳🇱 Netherlands
+vless://0ab1a445-bb3b-49f5-a06d-28968d100bb5@2.26.71.73:443?type=tcp&security=reality&encryption=none&flow=xtls-rprx-vision&sni=www.cloudflare.com&fp=firefox&pbk=YkcQyTOh9YpZmilRob-eVxwoo4uwBAa9oHmURMTFzEM&sid=2b8c5e91#🇩🇪 Germany 2
+hy2://c01eded1-3cdf-4eda-ba90-96b0d1016715@fl.eclapp.net:443?sni=fl.eclapp.net&alpn=h3#🇱🇻Latvia
+hy2://c01eded1-3cdf-4eda-ba90-96b0d1016715@se-01.eclipsebot.store:443?sni=se-01.eclipsebot.store&alpn=h3&insecure=0#🇨🇭Switzerland
+vless://3eb93645-ae73-464b-8ed2-15b8bfdfc933@us1.paledweld.com:443?type=tcp&security=reality&encryption=none&flow=xtls-rprx-vision&sni=us1.paledweld.com&fp=firefox&pbk=PI6Es6gPDE3vqzRK1fd8JF5SdroVc0dq_5-VGwbQkVs&sid=d76033c85896f94e#🇺🇸United States
+hy2://f77a0fa3e4850c34dc64eefe47a08f0c@us1.paledweld.com:443?sni=us1.paledweld.com&alpn=h3#🇺🇸United States 2
+vless://9436b30c-5642-4924-b24a-7b764aa6bfa8@lt1.paledweld.com:443?type=tcp&security=reality&encryption=none&flow=xtls-rprx-vision&sni=lt1.paledweld.com&fp=firefox&pbk=JH76DZWXlzW_G_xvaAbrs_Xz3k3i9GSD9jzCxqXJEFQ&sid=f550fcd259f0e549#🇱🇹Lithuania
+hy2://0tg3bUWNEujTVXmaJxwx8/xF@nl-yun.wazzio-dev.ru:443?sni=nl-yun.wazzio-dev.ru&alpn=h3#🇫🇮Finland
+vless://8bdb0ccc-9536-4361-91a7-2759f2d38072@ne.wazzio-dev.ru:443?type=tcp&security=tls&encryption=none&sni=ne.wazzio-dev.ru&fp=chrome#🇳🇱Netherlands 2
+vless://29f9f0ee-c7d8-4a1e-ac77-984f6b32c519@82.40.38.104:443?type=xhttp&security=reality&encryption=none&sni=ads.x5.ru&fp=firefox&pbk=tm9ddb_N0Wto30PZafl231j8zL-o4FmGVRxsbX_GbGQ&sid=2665&path=%2F&mode=auto#🇵🇱Poland
+vless://ae8d645e-3971-40ec-8438-6afa31f1a811@45.151.102.99:8443?type=grpc&security=reality&encryption=none&fp=chrome&sni=maps.apple.com&pbk=OMlQAFrCMZ3DX0xlnbEZiByLBFzpUE8XJHJsrBzLdlY&sid=2da4299da566b7&serviceName=your-custom-path#🇫🇷France
