@@ -152,6 +152,12 @@ def subscribe_keyboard(link):
 @dp.message(Command("start"))
 async def start(message: Message):
 
+    await add_user(
+        message.from_user.id,
+        message.from_user.username,
+        message.from_user.first_name
+    )
+
     username = message.from_user.username
 
     if username:
