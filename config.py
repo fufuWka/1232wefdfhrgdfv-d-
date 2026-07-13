@@ -25,17 +25,18 @@ BOT_LINK = "https://t.me/NE_FREE_VPN_bot"
 # ==========================
 
 FREE_SUB = (
-    "https://gist.githubusercontent.com/"
-    "fufuWka/58e04a989aea6e1adaf6fe809525148f/"
-    "raw/8270fb79876b0cf92e418a60df443729e01aadaf/"
-    "FREE_VPN.bot"
+    https://raw.githubusercontent.com/fufuWka/1232wefdfhrgdfv-d-/refs/heads/main/free.bot
+    "https://raw.githubusercontent.com/"
+    "fufuWka/1232wefdfhrgdfv-d-/"
+    "refs/heads/main/"
+    "free.bot"
 )
 
 PRO_SUB = (
-    "https://gist.githubusercontent.com/"
-    "fufuWka/58e04a989aea6e1adaf6fe809525148f/"
-    "raw/8270fb79876b0cf92e418a60df443729e01aadaf/"
-    "PRO_VPN.bot"
+"https://raw.githubusercontent.com/"
+    "fufuWka/1232wefdfhrgdfv-d-/"
+    "refs/heads/main/"
+    "pro.bot"
 )
 
 # ==========================
@@ -46,7 +47,7 @@ FREE_NAME = "FREE"
 FREE_SERVERS = 3
 
 PRO_NAME = "PRO"
-PRO_SERVERS = 8
+PRO_SERVERS = 18
 
 # ==========================
 # Поддержка
