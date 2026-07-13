@@ -447,6 +447,8 @@ async def back(call: CallbackQuery):
 
 async def main():
 
+    await init_db()
+
     print("NE_FREE_VPN_bot запущен!")
 
     await dp.start_polling(bot)
