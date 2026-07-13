@@ -1,6 +1,8 @@
 import asyncio
 import os
 
+from database import init_db, add_user
+
 from dotenv import load_dotenv
 
 from aiogram import Bot, Dispatcher
