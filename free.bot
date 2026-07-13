@@ -1,0 +1,11 @@
+#profile-title: FREE VPN v1.2
+#profile-update-interval: 102424378987356283745384953
+#subscription-userinfo: upload=0; download=0; total=1; expire=2546249531
+
+#announce: base64:8J+GkyBORSBGUkVFIFZQTiDigJQgRlJFRQrQlNC+0LHRgNC+INC/0L7QttCw0LvQvtCy0LDRgtGMIQoK0JIg0YLQsNGA0LjRhCBGUkVFIGLLhdC+0LTRj9GCOgoiIPCfjI0gMyDRgdC10YDQstC10YDQsArigKIg4pqhINCS0YvRgdC+0LrQsNGPINGB0LrQvtGA0L7RgdGC0YwKCmh0dHBzOi8vdC5tZS9ORV9GUkVFX1ZQTl9ib3Q=
+
+vless://ae8d645e-3971-40ec-8438-6afa31f1a811@ms.pleiades.codes:443?type=xhttp&security=tls&encryption=none&sni=ms.pleiades.codes&fp=chrome&alpn=h2&host=ms.pleiades.codes&path=%2Fxhttppath&mode=packet-up#%F0%9F%87%B8%F0%9F%87%B4LTE
+vless://ae8d645e-3971-40ec-8438-6afa31f1a811@dns.pleiades.codes:443?type=xhttp&security=tls&encryption=none&sni=dns.pleiades.codes&fp=chrome&alpn=h2,http/1.1&host=dns.pleiades.codes&path=%2Fuploadfiles%2F&mode=packet-up#%F0%9F%87%B8%F0%9F%87%B4LTE
+vless://b0ec4b93-7602-415d-a832-b50477e6cd20@186.246.1.119:443?encryption=none&security=reality&type=grpc&sni=optim.tildacdn.pub&fp=firefox&pbk=unNROkbh95ZZNHzG2RIkgrFftOLldNH0ccmtW63CziE&serviceName=ebl#%F0%9F%87%B7%F0%9F%87%BA%20Russia
+hy2://b0ec4b93-7602-415d-a832-b50477e6cd20@deu2.pandaonline.org:443?sni=deu2.pandaonline.org&alpn=h3&insecure=0#%F0%9F%87%A9%F0%9F%87%AA%20Germany
+vless://b0ec4b93-7602-415d-a832-b50477e6cd20@110.172.148.27:443?encryption=none&security=reality&sni=optim.tildacdn.pub&fp=chrome&pbk=fvpPs49YdpPvrAr7xyminj-wzGaRnB7CRVfYDalewkY&type=grpc&serviceName=ebl#%F0%9F%87%A6%F0%9F%87%B9%20Austria
