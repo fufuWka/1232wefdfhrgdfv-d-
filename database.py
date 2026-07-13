@@ -114,3 +114,16 @@ async def set_tariff(user_id, tariff):
         )
 
         await db.commit()
+        
+async def get_all_users():
+
+    async with aiosqlite.connect(DB_NAME) as db:
+
+        cursor = await db.execute(
+            """
+            SELECT *
+            FROM users
+            """
+        )
+
+        return await cursor.fetchall()
