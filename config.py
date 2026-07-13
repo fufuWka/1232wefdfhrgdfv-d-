@@ -27,14 +27,14 @@ BOT_LINK = "https://t.me/NE_FREE_VPN_bot"
 FREE_SUB = (
     "https://gist.githubusercontent.com/"
     "fufuWka/58e04a989aea6e1adaf6fe809525148f/"
-    "raw/59f8d78fe298ba2743279f350a4b75b82e4ae8b1/"
+    "raw/8f8688d41d79ebd2ded471f262507e0a56d4a071/"
     "FREE_VPN.bot"
 )
 
 PRO_SUB = (
     "https://gist.githubusercontent.com/"
     "fufuWka/58e04a989aea6e1adaf6fe809525148f/"
-    "raw/ff9ef77549fbf3a3c60482bb19817bba14ca1e0d/"
+    "raw/8f8688d41d79ebd2ded471f262507e0a56d4a071/"
     "PRO_VPN.bot"
 )
 
