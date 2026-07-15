@@ -94,33 +94,7 @@ async def start(message: Message):
         reply_markup=main_keyboard(is_admin)
     )
 
-@dp.callback_query(lambda c: c.data == "profile")
-async def profile(call: CallbackQuery):
 
-    user = await get_user(call.from_user.id)
-
-    tariff = user[4]
-
-    if tariff == "FREE":
-        sub = FREE_SUB
-    elif tariff == "PRO":
-        sub = PRO_SUB
-    else:
-        sub = PREMIUM_SUB
-
-    await call.message.edit_text(
-        f"""
-👤 Профиль
-
-🆔 ID: {call.from_user.id}
-👤 Имя: {call.from_user.first_name}
-
-💎 Тариф: {tariff}
-""",
-        reply_markup=profile_keyboard(sub)
-    )
-
-    await call.answer()
 
 # =========================
 # VPN MENU
@@ -215,26 +189,7 @@ async def pro(call: CallbackQuery):
         reply_markup=back_keyboard()
     )
 
-@dp.callback_query(lambda c: c.data == "back")
-async def back(call: CallbackQuery):
 
-    is_admin = (
-        call.from_user.id in ADMINS
-        or call.from_user.id in MODERATORS
-    )
-
-    await call.message.edit_text(
-        f"""
-🚀 {BOT_NAME}
-
-Привет, {call.from_user.first_name}! 👋
-
-Выберите нужный раздел.
-""",
-        reply_markup=main_keyboard(is_admin)
-    )
-
-    await call.answer()
 
 # =========================
 # PROFILE
@@ -473,14 +428,15 @@ async def help_menu(call: CallbackQuery):
 @dp.callback_query(lambda c: c.data == "admin")
 async def admin(call: CallbackQuery):
 
-    if call.from_user.id != ADMIN_ID:
-
-        await call.answer(
-            "Нет доступа ❌",
-            show_alert=True
-        )
-
-        return
+if (
+    call.from_user.id not in ADMINS
+    and call.from_user.id not in MODERATORS
+):
+    await call.answer(
+        "Нет доступа ❌",
+        show_alert=True
+    )
+    return
 
 
     await call.message.edit_text(
@@ -519,10 +475,10 @@ async def back(call: CallbackQuery):
 
 Выберите действие:
 """,
-        reply_markup=main_keyboard(
-            call.from_user.id == ADMIN_ID
-        )
-    )
+reply_markup=main_keyboard(
+    call.from_user.id in ADMINS
+    or call.from_user.id in MODERATORS
+)
 
 
 
