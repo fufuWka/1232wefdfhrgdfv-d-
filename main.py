@@ -94,7 +94,33 @@ async def start(message: Message):
         reply_markup=main_keyboard(is_admin)
     )
 
+@dp.callback_query(lambda c: c.data == "profile")
+async def profile(call: CallbackQuery):
 
+    user = await get_user(call.from_user.id)
+
+    tariff = user[4]
+
+    if tariff == "FREE":
+        sub = FREE_SUB
+    elif tariff == "PRO":
+        sub = PRO_SUB
+    else:
+        sub = PREMIUM_SUB
+
+    await call.message.edit_text(
+        f"""
+👤 Профиль
+
+🆔 ID: {call.from_user.id}
+👤 Имя: {call.from_user.first_name}
+
+💎 Тариф: {tariff}
+""",
+        reply_markup=profile_keyboard(sub)
+    )
+
+    await call.answer()
 
 # =========================
 # VPN MENU
