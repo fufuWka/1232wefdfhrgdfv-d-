@@ -475,6 +475,7 @@ reply_markup=main_keyboard(
     call.from_user.id in ADMINS
     or call.from_user.id in MODERATORS
 )
+    )
 
 
 
