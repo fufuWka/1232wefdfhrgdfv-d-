@@ -12,6 +12,7 @@ from config import (
     FREE_SUB,
     PRO_SUB,
     PREMIUM_SUB,
+    PRO_KEY,
     ADMINS,
     MODERATORS,
     WL_PS
@@ -37,7 +38,7 @@ bot = Bot(
 )
 
 dp = Dispatcher()
-
+WAITING_PRO_KEY = {}
 register_admin(dp)
 
 # =========================
@@ -175,41 +176,15 @@ https://t.me/NE_FREE_VPN_bot
 @dp.callback_query(lambda c: c.data == "pro")
 async def pro(call: CallbackQuery):
 
-    if call.from_user.id in WL_PS:
-
-        await set_tariff(
-            call.from_user.id,
-            "PRO"
-        )
-
-        await call.message.edit_text(
-            f"""
-⭐ NE FREE VPN PRO
-
-Ваш тариф:
-
-PRO
-
-🌍 Серверов: 18
-
-⚡ Скорость: Максимальная
-
-Подписка:
-
-{PRO_SUB}
-""",
-            reply_markup=back_keyboard()
-        )
-
-        return
+    WAITING_PRO_KEY[call.from_user.id] = True
 
     await call.message.edit_text(
         """
-⭐ Для активации PRO
+⭐ NE FREE VPN PRO
 
-Введите ключ активации.
+Для активации PRO
 
-(Проверка ключей появится позже.)
+Введите ключ активации следующим сообщением.
 """,
         reply_markup=back_keyboard()
     )
@@ -521,7 +496,44 @@ async def main():
 
     await dp.start_polling(bot)
 
+@dp.message()
+async def pro_key(message: Message):
 
+    if message.from_user.id not in WAITING_PRO_KEY:
+        return
+
+    del WAITING_PRO_KEY[message.from_user.id]
+
+    if message.text == PRO_KEY:
+
+        await set_tariff(
+            message.from_user.id,
+            "PRO"
+        )
+
+        await message.answer(
+            f"""
+⭐ NE FREE VPN PRO
+
+Ваш тариф:
+
+PRO
+
+🌍 Серверов: 8
+
+⚡ Скорость: Максимальная
+
+Подписка:
+
+{PRO_SUB}
+"""
+        )
+
+    else:
+
+        await message.answer(
+            "❌ Неверный ключ активации."
+        )
 
 if __name__ == "__main__":
 
