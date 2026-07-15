@@ -1,15 +1,20 @@
 import asyncio
 
+from admin import register_admin
+
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 
 from config import (
     BOT_TOKEN,
-    ADMIN_ID,
     BOT_NAME,
     FREE_SUB,
-    PRO_SUB
+    PRO_SUB,
+    PREMIUM_SUB,
+    ADMINS,
+    MODERATORS,
+    WL_PS
 )
 
 from database import (
@@ -33,7 +38,7 @@ bot = Bot(
 
 dp = Dispatcher()
 
-
+register_admin(dp)
 
 # =========================
 # START
@@ -57,9 +62,11 @@ async def start(message: Message):
     )
 
 
-    is_admin = (
-        message.from_user.id == ADMIN_ID
-    )
+is_admin = (
+    message.from_user.id in ADMINS
+    or
+    message.from_user.id in MODERATORS
+)
 
 
     await message.answer(
@@ -168,31 +175,60 @@ https://t.me/NE_FREE_VPN_bot
 @dp.callback_query(lambda c: c.data == "pro")
 async def pro(call: CallbackQuery):
 
+if call.from_user.id in WL_PS:
+
     await set_tariff(
         call.from_user.id,
         "PRO"
     )
 
+else:
+
+    await call.message.edit_text(
+        """
+⭐ Для активации PRO
+
+Введите ключ активации.
+
+(Проверка ключей будет добавлена позже.)
+        """,
+        reply_markup=back_keyboard()
+    )
+
+    return
+
+    await set_tariff(
+        call.from_user.id,
+        "PRO"
+    )
 
     await call.message.edit_text(
         f"""
 ⭐ NE FREE VPN PRO
 
+Ваш тариф:
 
-Ваш тариф: PRO
+PRO
+
 
 Характеристики:
 
-🌍 Серверов: 18 (LTE + Базовые сервера + PRO сервера)
+🌍 Серверов: 18
+
 ⚡ Максимальная скорость
+
 🚀 Приоритетные сервера
-🍀 Наилучшая стабильность 
+
+🍀 Наилучшая стабильность
+
 
 Подписка:
 
 {PRO_SUB}
 
+
 Наш бот:
+
 https://t.me/NE_FREE_VPN_bot
 """,
         reply_markup=back_keyboard()
@@ -232,7 +268,60 @@ VPN получено: {user[5]}
             reply_markup=back_keyboard()
         )
 
+#==========================
+# PREMIUM
+#==========================
 
+@dp.callback_query(lambda c: c.data == "premium")
+async def premium(call: CallbackQuery):
+
+    if call.from_user.id not in WL_PS:
+
+        await call.answer(
+            "⛔ Premium доступен только участникам WhiteList.",
+            show_alert=True
+        )
+
+        return
+
+    await set_tariff(
+        call.from_user.id,
+        "PREMIUM"
+    )
+
+    await call.message.edit_text(
+        f"""
+💎 NE FREE VPN PREMIUM
+
+Ваш тариф:
+
+PREMIUM
+
+
+Характеристики
+
+🌍 Все серверы
+
+🚀 Максимальный приоритет
+
+⚡ До 10 Гбит/сек
+
+⭐ Premium поддержка
+
+🎁 Эксклюзивные сервера
+
+
+Подписка
+
+{PREMIUM_SUB}
+
+
+Наш бот
+
+https://t.me/NE_FREE_VPN_bot
+""",
+        reply_markup=back_keyboard()
+    )
 
 # =========================
 # STATS
@@ -283,6 +372,47 @@ async def stats(call: CallbackQuery):
     )
 
 
+
+
+#==========================
+# ADMIN
+#==========================
+
+@dp.message(Command("admin"))
+async def admin_command(message: Message):
+
+    if (
+        message.from_user.id
+        not in ADMINS
+        and
+        message.from_user.id
+        not in MODERATORS
+    ):
+
+        await message.answer(
+            "❌ У вас нет доступа."
+        )
+
+        return
+
+    users = await get_users_count()
+
+    await message.answer(
+        f"""
+👑 Панель управления
+
+👥 Пользователей:
+
+{users}
+
+Ваш статус:
+
+{"Администратор" if message.from_user.id in ADMINS else "Модератор"}
+
+Выберите действие.
+""",
+        reply_markup=back_keyboard()
+    )
 
 # =========================
 # SETTINGS
