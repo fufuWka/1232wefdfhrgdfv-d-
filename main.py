@@ -175,14 +175,33 @@ https://t.me/NE_FREE_VPN_bot
 @dp.callback_query(lambda c: c.data == "pro")
 async def pro(call: CallbackQuery):
 
-if call.from_user.id in WL_PS:
+    if call.from_user.id in WL_PS:
 
-    await set_tariff(
-        call.from_user.id,
-        "PRO"
-    )
+        await set_tariff(
+            call.from_user.id,
+            "PRO"
+        )
 
-else:
+        await call.message.edit_text(
+            f"""
+⭐ NE FREE VPN PRO
+
+Ваш тариф:
+
+PRO
+
+🌍 Серверов: 18
+
+⚡ Скорость: Максимальная
+
+Подписка:
+
+{PRO_SUB}
+""",
+            reply_markup=back_keyboard()
+        )
+
+        return
 
     await call.message.edit_text(
         """
@@ -190,46 +209,7 @@ else:
 
 Введите ключ активации.
 
-(Проверка ключей будет добавлена позже.)
-        """,
-        reply_markup=back_keyboard()
-    )
-
-    return
-
-    await set_tariff(
-        call.from_user.id,
-        "PRO"
-    )
-
-    await call.message.edit_text(
-        f"""
-⭐ NE FREE VPN PRO
-
-Ваш тариф:
-
-PRO
-
-
-Характеристики:
-
-🌍 Серверов: 18
-
-⚡ Максимальная скорость
-
-🚀 Приоритетные сервера
-
-🍀 Наилучшая стабильность
-
-
-Подписка:
-
-{PRO_SUB}
-
-
-Наш бот:
-
-https://t.me/NE_FREE_VPN_bot
+(Проверка ключей появится позже.)
 """,
         reply_markup=back_keyboard()
     )
