@@ -40,6 +40,13 @@ PRO_SUB = (
     "pro.bot"
 )
 
+PREMIUM_SUB = (
+    "https://raw.githubusercontent.com/"
+    "fufuWka/1232wefdfhrgdfv-d-/"
+    "refs/heads/main/"
+    "premium.bot"
+)
+
 # ==========================
 # Тарифы
 # ==========================
