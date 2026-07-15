@@ -428,34 +428,30 @@ async def help_menu(call: CallbackQuery):
 @dp.callback_query(lambda c: c.data == "admin")
 async def admin(call: CallbackQuery):
 
-if (
-    call.from_user.id not in ADMINS
-    and call.from_user.id not in MODERATORS
-):
-    await call.answer(
-        "Нет доступа ❌",
-        show_alert=True
-    )
-    return
+    if (
+        call.from_user.id not in ADMINS
+        and call.from_user.id not in MODERATORS
+    ):
 
+        await call.answer(
+            "Нет доступа ❌",
+            show_alert=True
+        )
+        return
 
     await call.message.edit_text(
         """
 👑 Админ-панель
 
-
 🟢 Бот работает
-
 
 Функции:
 
 👥 Пользователи
-
 📢 Рассылка
-
 📊 Статистика
 """,
-        reply_markup=back_keyboard()
+        reply_markup=admin_keyboard()
     )
 
 
