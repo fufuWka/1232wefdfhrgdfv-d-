@@ -29,7 +29,10 @@ from database import (
 from keyboards import (
     main_keyboard,
     vpn_keyboard,
-    back_keyboard
+    profile_keyboard,
+    settings_keyboard,
+    admin_keyboard,
+    back_keyboard,
 )
 
 
@@ -186,7 +189,26 @@ async def pro(call: CallbackQuery):
         reply_markup=back_keyboard()
     )
 
+@dp.callback_query(lambda c: c.data == "back")
+async def back(call: CallbackQuery):
 
+    is_admin = (
+        call.from_user.id in ADMINS
+        or call.from_user.id in MODERATORS
+    )
+
+    await call.message.edit_text(
+        f"""
+🚀 {BOT_NAME}
+
+Привет, {call.from_user.first_name}! 👋
+
+Выберите нужный раздел.
+""",
+        reply_markup=main_keyboard(is_admin)
+    )
+
+    await call.answer()
 
 # =========================
 # PROFILE
