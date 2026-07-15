@@ -18,6 +18,8 @@ ADMIN_ID = int(
 
 BOT_NAME = "NE_FREE_VPN_bot"
 
+PRO_KEY = "1111-2222-3333"
+
 BOT_LINK = "https://t.me/NE_FREE_VPN_bot"
 
 # ==========================
