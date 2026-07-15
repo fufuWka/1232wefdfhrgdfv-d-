@@ -62,18 +62,15 @@ async def start(message: Message):
         else message.from_user.first_name
     )
 
-
-is_admin = (
-    message.from_user.id in ADMINS
-    or
-    message.from_user.id in MODERATORS
-)
-
+    is_admin = (
+        message.from_user.id in ADMINS
+        or
+        message.from_user.id in MODERATORS
+    )
 
     await message.answer(
         f"""
 🚀 {BOT_NAME}
-
 
 Привет, {username}! 👋
 
