@@ -1,0 +1,90 @@
+"routing": {
+  "domainStrategy": "IPIfNonMatch",
+  "balancers": [
+    {
+      "tag": "_-balancer",
+      "selector": [
+        "LTE-🇩🇪",
+        "LTE-🇫🇮",
+        "🇷🇺",
+        "🇩🇪",
+        "🇫🇮",
+        "🇳🇱"
+      ],
+      "strategy": {
+        "type": "leastLoad",
+        "settings": {
+          "expected": 1,
+          "baselines": [
+            "1s"
+          ],
+          "tolerance": 0.8
+        }
+      }
+    }
+  ],
+  "rules": [
+    {
+      "type": "field",
+      "network": "udp",
+      "port": "443",
+      "outboundTag": "block",
+      "comment": "Блокировка HTTP/3 (QUIC) для стабильной работы YouTube/TLS"
+    },
+    {
+      "type": "field",
+      "protocol": [
+        "bittorrent"
+      ],
+      "outboundTag": "direct",
+      "comment": "Торренты напрямую через провайдера"
+    },
+    {
+      "type": "field",
+      "domain": [
+        "geosite:category-ads-all"
+      ],
+      "outboundTag": "block",
+      "comment": "Блокировка рекламы"
+    },
+    {
+      "type": "field",
+      "domain": [
+        "domain:ru",
+        "geosite:max",
+        "geosite:yandex",
+        "geosite:vk"
+      ],
+      "outboundTag": "direct",
+      "comment": "Российские сервисы и .ru сайты напрямую"
+    },
+    {
+      "type": "field",
+      "ip": [
+        "geoip:private",
+        "geoip:ru"
+      ],
+      "outboundTag": "direct",
+      "comment": "Локальная сеть и российские IP напрямую"
+    },
+    {
+      "type": "field",
+      "domain": [
+        "geosite:youtube",
+        "geosite:instagram",
+        "geosite:twitter",
+        "geosite:openai",
+        "geosite:facebook",
+        "geosite:discord"
+      ],
+      "balancerTag": "_-balancer",
+      "comment": "Заблокированные/замедленные сервисы через балансировщик VPN"
+    },
+    {
+      "type": "field",
+      "network": "tcp,udp",
+      "balancerTag": "_-balancer",
+      "comment": "Весь остальные запросы идут в балансировщик"
+    }
+  ]
+}
